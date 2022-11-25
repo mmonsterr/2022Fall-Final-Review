@@ -2,4 +2,6 @@
 
 #### 介绍
 2022fall期末复习<br>
-netword.md————————网络工程
+network.md————————网络工程
+
+pocc.md——————————计算机组成原理 Principles of Computer Composition
