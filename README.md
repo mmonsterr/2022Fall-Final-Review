@@ -11,7 +11,7 @@ network.md<br>
 
 **编译原理**<br>
 <u>十六周 周三13:30-15:30 12.14</u> <br>
-cp.md—————	Compilation principle<br>
+cp.md<br>
 
 **计算机组成原理**<br>
 pocc.md <br>
