@@ -1,5 +1,7 @@
 # 2022Fall-Final-Review
 
+<font color=#ABCDEF>使用typora获得更好的阅读体验</font>
+
 ### 2022fall期末复习 <br>
 **Web开发** <br>
 <u>十四周 周五 12.3（暂定）</u> <br>
