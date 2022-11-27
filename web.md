@@ -90,20 +90,20 @@ Q2.session相关
 @WebServlet("/LoginSession")
 public void doPost(HttpServletRequest requset,HttpServletResponse response)
 		throws ServletException,IOException{
-	HttpSession session = request.getSession();			//得到session对象
-    String account = request.getParameter("account");
-    String secret = request.getParameter("secret");
-    RequestDispatcher dispatcher = null;
-    if(LoginManagement.login(account, secret)){			//登陆成功
-        request.setAttribute("log","ok");
-        request.setAttribute("name",account);			//成功，向session对象中写入用户名
-        dispatcher = getServletContext().getRequestDispatcher("/bookmain.jsp");
-    }
-    else{
-        request.setAttribute("log","err");
-        dispatcher = getServletContext().getRequestDispatcher("/login.jsp");
-    }
-        dispatcher.forward(request, response);
+            HttpSession session = request.getSession();		//得到session对象
+            String account = request.getParameter("account");
+            String secret = request.getParameter("secret");
+            RequestDispatcher dispatcher = null;
+            if(LoginManagement.login(account, secret)){		//登陆成功
+                request.setAttribute("log","ok");
+                request.setAttribute("name",account);		//成功，向session对象中写入用户名
+                dispatcher = getServletContext().getRequestDispatcher("/bookmain.jsp");
+            }
+            else{
+                request.setAttribute("log","err");
+                dispatcher = getServletContext().getRequestDispatcher("/login.jsp");
+            }
+            dispatcher.forward(request, response);
 		}
 ```
 
@@ -174,42 +174,47 @@ Q2.P76页代码
 ```java
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>login.html</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>login.html</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-	</head>
-  <body>
+</head>
+
+<body>
 	<div id="app">
-	<form  @submit.prevent="onSubmit" method="post">
-		<P>用户名<input  type="text" size="20" v-model="userName"></P>
-		<P>密码<input  type="password" size="20" v-model="passWord"></P>
-		<P><input type="submit"  value="提交" > </P>
-	</form>
-	<span >{{promptMess}}</span>
-	</div >
+		<form @submit.prevent="onSubmit" method="post">
+			<P>用户名<input type="text" size="20" v-model="userName"></P>
+			<P>密码<input type="password" size="20" v-model="passWord"></P>
+			<P><input type="submit" value="提交"> </P>
+		</form>
+		<span>{{promptMess}}</span>
+	</div>
 	<script type="text/javascript">
-	var vm = new Vue({
-        el: '#app',
-        data: { promptMess:"",userName:"", passWord:"",},
-        methods:{
-        	onSubmit:function(){
-        		var self=this;//回调函数中无法获得this.
-        		axios({url:"LogServlet",method:"post",
-			 		data:{name:this.userName,pass:this.passWord}})
-			 		.then(function(response){
-			 			if(response.data=="error")//登录失败，返回空串，
-							self.promptMess="密码或用户名错误";
-			 			else{
-							self.promptMess="登录成功";
-							//其它代码；
+		var vm = new Vue({
+			el: '#app',
+			data: { promptMess: "", userName: "", passWord: "", },
+			methods: {
+				onSubmit: function () {
+					var self = this;//回调函数中无法获得this.
+					axios({
+						url: "LogServlet", method: "post",
+						data: { name: this.userName, pass: this.passWord }
+					})
+						.then(function (response) {
+							if (response.data == "error")//登录失败，返回空串，
+								self.promptMess = "密码或用户名错误";
+							else {
+								self.promptMess = "登录成功";
+								//其它代码；
 							}
-			 		}).catch(function(error){  });
-        	}
-        }});
+						}).catch(function (error) { });
+				}
+			}
+		});
 	</script>
-  </body>
+</body>
 
 </html>
 ```
@@ -226,27 +231,29 @@ P77代码
 ```java
 @WebServlet("/LogServlet")
 public class LogServlet extends HttpServlet {
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.setContentType("text/html;  charset=utf-8");
-		BufferedReader rd = request.getReader();
-		String strJSON="",temp;
-		while ( (temp=rd.readLine())!=null) {
-			strJSON=strJSON+temp;
-		}
-		System.out.println(strJSON);
-		JSONObject obj=JSON.parseObject(strJSON);
-		System.out.println(obj);
-		String name=obj.getString("name");
-		String pass=obj.getString("pass");
-		System.out.println(name);
-		PrintWriter out = response.getWriter();
-		//HttpSession session=request.getSession();
-		String returnString="error";
-		if(name.equals("123") && pass.equals("123"))
-			returnString="ok";
-		out.write(returnString);
-	}
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        response.setContentType("text/html;  charset=utf-8");
+        BufferedReader rd = request.getReader();
+        String strJSON = "", temp;
+        while ((temp = rd.readLine()) != null) {
+            strJSON = strJSON + temp;
+        }
+        System.out.println(strJSON);
+        JSONObject obj = JSON.parseObject(strJSON);
+        System.out.println(obj);
+        String name = obj.getString("name");
+        String pass = obj.getString("pass");
+        System.out.println(name);
+        PrintWriter out = response.getWriter();
+        //HttpSession session=request.getSession();
+        String returnString = "error";
+        if (name.equals("123") && pass.equals("123"))
+            returnString = "ok";
+        out.write(returnString);
+    }
+}
 ```
 
 #### Servlet过滤器
@@ -275,26 +282,26 @@ Q2.POJO
 ```java
 @Service("userService")
 public class UserService {
-	//以下是字段field注入方式 
-	@Autowired
-	private UserDao userDao;
-	@Autowired
-	private User  user;
+    //以下是字段field注入方式
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private User user;
     /*@Autowired 构造器注入
 	public UserService(UserDao userDao,User user) {
 	 
 		this.userDao=userDao;
 		this.user=user;
 	}*/
-    
-	//@Autowired  set注入
+
+    //@Autowired  set注入
  	/*public void setUserDao(UserDao userDao ){this.userDao=userDao;}
 	public void setUser(User user ){this.user=user;}*/
 
     public void loginUser() {
-      userDao.login(user);
+        userDao.login(user);
     }
-	//其它API，略
+    //其它API，略
 
 
 }
@@ -334,6 +341,7 @@ P145代码挖空
 
 ```java
 package JDBC入门;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -341,51 +349,52 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 
-
 final public class DBConnection {
-	final private static String url="jdbc:mysql://127.0.0.1:3306/wcb?useUnicode=true&characterEncoding=utf-8";
-	final private static String user="root";
-	final private static String pass="123456";
-	final private  static String driverName ="com.mysql.jdbc.Driver";
-	//private static Connection conn=null;
-	static {
-		
+    final private static String url = "jdbc:mysql://127.0.0.1:3306/wcb?useUnicode=true&characterEncoding=utf-8";
+    final private static String user = "root";
+    final private static String pass = "123456";
+    final private static String driverName = "com.mysql.jdbc.Driver";
+
+    //private static Connection conn=null;
+    static {
+
 //		Java 开发中，需要将一些易变的配置参数放置再 XML 配置文件或者 properties 配置文件中。然而 XML 配置文件
 //		需要通过 DOM 或 SAX 方式解析，
 //		而读取 properties 配置文件就比较容易
-		try {
-			Class.forName(driverName);//加载JDBC驱动器
-			System.out.printf("JDBC1");
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				}
-		}
-	public static Connection getConnection()
- {
-		try {
-			Connection conn = DriverManager.getConnection(url,user, pass);
-			System.out.println("连接数据库成功");
-			return conn;
-		} catch (SQLException ex) {
-			System.out.println("连接数据库失败");
-			ex.printStackTrace();
-			return null;
-			}
-		}
-	public static void close(Connection conn, Statement stm ,ResultSet rs)
-	 {
-		try{
-			if (rs != null)
-				 rs.close();
-			if(stm!=null) 
-				stm.close();
-			if (conn != null){
-				conn.close();
-				System.out.println("数据库连接成功释放");
-				}
-			} catch (SQLException ex) {}
-		}
-	
+        try {
+            Class.forName(driverName);//加载JDBC驱动器
+            System.out.printf("JDBC1");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static Connection getConnection() {
+        try {
+            Connection conn = DriverManager.getConnection(url, user, pass);
+            System.out.println("连接数据库成功");
+            return conn;
+        } catch (SQLException ex) {
+            System.out.println("连接数据库失败");
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void close(Connection conn, Statement stm, ResultSet rs) {
+        try {
+            if (rs != null)
+                rs.close();
+            if (stm != null)
+                stm.close();
+            if (conn != null) {
+                conn.close();
+                System.out.println("数据库连接成功释放");
+            }
+        } catch (SQLException ex) {
+        }
+    }
+
 
 }
 ```
