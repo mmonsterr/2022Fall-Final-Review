@@ -97,13 +97,13 @@ public void doPost(HttpServletRequest requset,HttpServletResponse response)
     if(LoginManagement.login(account, secret)){			//登陆成功
         request.setAttribute("log","ok");
         request.setAttribute("name",account);			//成功，向session对象中写入用户名
-        dispatcher = getServletContext().getRequestDispatcher("/bookmain.jsp")；
+        dispatcher = getServletContext().getRequestDispatcher("/bookmain.jsp");
     }
     else{
         request.setAttribute("log","err");
-        dispatcher = getServletContext().getRequestDispatcher("/login.jsp")；
+        dispatcher = getServletContext().getRequestDispatcher("/login.jsp");
     }
-        dispatcher.forward(request, response)；
+        dispatcher.forward(request, response);
 		}
 ```
 
