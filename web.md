@@ -35,7 +35,7 @@ Q2.多人协作开发
 
 #### Servlet的生命周期
 
-![Servlet的生命周期](http://43.143.47.243/img/Servlet.jpeg)
+<img src="./web.assets/Servlet.jpeg" alt="img" style="zoom:50%;" />
 
 ##### Servlet的生命周期包括加载和实例化、初始化、服务和销毁过程。 
 
@@ -307,7 +307,7 @@ public class UserService {
 
 #### Spring MVC P115	<font color=red>**粗略带过**</font>
 
-![Servlet的生命周期](http://43.143.47.243/img/Spring MVC.png)
+<img src="./web.assets/Spring MVC.png" alt="img"  />
 
 Spring MVC是当前最优秀的MVC框架，自从Spring 3版本发布后，支持注解配置.。提供了模型-视图-控制器（MVC）架构和现成组件，可以用来开发灵活和松散耦合的Web应用程序。MVC模式可以分离应用程序的不同方面（输入逻辑、业务逻辑和UI逻辑），同时提供这些元素之间的松散耦合。
 
@@ -323,7 +323,7 @@ Maven就是一个包含了项目对象模型(Project Object Model,POM)的软件�
 
 #### MyBatis	<font color=red>**粗略带过**</font>
 
-![Servlet的生命周期](http://43.143.47.243/img/⁫MyBatis.png)
+![img](./web.assets/⁫MyBatis.png)
 
 是一个基于Java的持久层框架
 支持自定义SQL、存储过程以及高级映射，免除了几乎所有的JDBC代码以及设置参数和获取结果集的工作
