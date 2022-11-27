@@ -2,7 +2,7 @@
 
 使用typora获得更好的~~阅读~~ ~~复习~~ **预习**体验
 
-### NJTECH-2022fall期末复习 <br>
+### NJTECH-2022Fall期末复习 <br>
 **Web开发** <br>
 <u>十四周 周五 12.2（暂定）</u> <br>
 web.md <br>
