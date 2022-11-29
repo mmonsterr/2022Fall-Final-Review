@@ -335,67 +335,64 @@ Maven就是一个包含了项目对象模型(Project Object Model,POM)的软件�
 是一个基于Java的持久层框架
 支持自定义SQL、存储过程以及高级映射，免除了几乎所有的JDBC代码以及设置参数和获取结果集的工作
 
-#### 数据库
+#### JDBC应用示例
 
 P145代码挖空
 
 ```java
-package JDBC入门;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-
-final public class DBConnection {
-    final private static String url = "jdbc:mysql://127.0.0.1:3306/wcb?useUnicode=true&characterEncoding=utf-8";
-    final private static String user = "root";
-    final private static String pass = "123456";
-    final private static String driverName = "com.mysql.jdbc.Driver";
-
-    //private static Connection conn=null;
-    static {
-
-//		Java 开发中，需要将一些易变的配置参数放置再 XML 配置文件或者 properties 配置文件中。然而 XML 配置文件
-//		需要通过 DOM 或 SAX 方式解析，
-//		而读取 properties 配置文件就比较容易
+import java.sql.*;
+public class FirstJDBC {
+    public static void main(String arg[]) {
+        // 指定连接的数据库URL
+        String url = "jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf-8"; // 解决中文字符问题
+        // JDBC 5.X的驱动名称
+        // JDBC 8.X的驱动名称为 com.mysql.cj.jdbc.Driver
+        String driver = "com.mysql.jdbc.Driver";
+        String user = "root";
+        String pass = "123456";
+        Connection con=null;
+        Statement stmt = null;
+        ResultSet rs = null;
         try {
-            Class.forName(driverName);//加载JDBC驱动器
-            System.out.printf("JDBC1");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public static Connection getConnection() {
-        try {
-            Connection conn = DriverManager.getConnection(url, user, pass);
-            System.out.println("连接数据库成功");
-            return conn;
-        } catch (SQLException ex) {
-            System.out.println("连接数据库失败");
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
-    public static void close(Connection conn, Statement stm, ResultSet rs) {
-        try {
-            if (rs != null)
-                rs.close();
-            if (stm != null)
-                stm.close();
-            if (conn != null) {
-                conn.close();
-                System.out.println("数据库连接成功释放");
+            // 加载JDBC驱动器
+            Class.forName(driver);
+            // 通过驱动程序管理器建立与数据库的连接
+            con = DriverManager.getConnection(url, user, pass);
+            // 创建执行查询的 Statement 对象
+            stmt = con.createStatement();
+            // SQL语句，用于查询用户表中信息
+            String sql = "select * from tb_user";
+            // 以上变量定义在 try 块外
+            // 执行查询，查询结果放在 ResultSet 对象中
+            rs = stmt.executeQuery(sql);
+            String name,password,tel;
+            // 打印查询结果
+            while(rs.next()) {
+                // 获得每一行每一列的数据
+                name = rs.getString(1);
+                password = rs.getString(2);
+                tel = rs.getString("tel");
+                System.out.println(name + "," + password + "," + tel);
             }
-        } catch (SQLException ex) {
+        }
+        // 找不到驱动程序，捕捉异常。如发生该错误，请检查JDK版本是否在1.1以上
+        catch(ClassNotFoundException e) {
+            System.out.println("错误：" + e);
+        }
+        catch (SQLException e1) {
+            System.out.println("错误：" + e1);
+        }
+        finally {
+            try {
+                rs.close();
+                stmt.close();
+                con.close();
+            }
+            catch(SQLException e) {
+
+            }
         }
     }
-
-
 }
 ```
 
