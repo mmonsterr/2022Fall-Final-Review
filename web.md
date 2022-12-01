@@ -110,8 +110,8 @@ public void doPost(HttpServletRequest requset,HttpServletResponse response)
 比如考察
 
 `dispatcher.forward(...)`的两个参数
-注解`@WebServlet("/LoginSession")``
-``doPost(...)`参数
+注解`@WebServlet("/LoginSession")
+doPost(...)`参数
 `request` `response`所属的类
 
 题目分值为挖空个数 
