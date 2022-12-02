@@ -1,6 +1,6 @@
 # Web应用开发基础
 
-#### Web应用四层开发模式，如何进行多人协作开发
+## Web应用四层开发模式，如何进行多人协作开发
 
 Q1.四层开发：表现层、服务层、业务层、数据访问层
 
@@ -31,9 +31,9 @@ Q2.多人协作开发
 
   建立清晰、有序、无阻塞的开发流程。
 
-#### 谈一谈web开发与社会、生活、环境、法律、安全等方面的联系、好处以及解决了什么问题
+## 谈一谈web开发与社会、生活、环境、法律、安全等方面的联系、好处以及解决了什么问题
 
-#### Servlet的生命周期
+## Servlet的生命周期
 
 <img src="./web.assets/Servlet.jpeg" alt="img" style="zoom:50%;" />
 
@@ -53,7 +53,7 @@ Q2.多人协作开发
 
 （理解）其中，加载和实例化过程只有一次（调用init()方法），这个过程可能是Tomcat容器启动时执行，也可能是第一次访问该Servlet执行，这主要取决于容器的配置文件。服务过程（对每一次请求调用service()方法）是不受限制的，每次服务过程就是一个Servlet线程的运行过程。当Tomcat容器关闭时，执行destroy()方法，销毁Servlet实例。但是，也可能由于Servlet本身的变化而提前执行，不过Servlet的生命周期不长于容器的生命周期。
 
-#### MVC模式意义 （P38看书的具体解释） 你在开发web项目的时候MVC和哪些是关联的
+## MVC模式意义 （P38看书的具体解释） 你在开发web项目的时候MVC和哪些是关联的
 
 Q1.意义： MVC强制把数据从表示层分离出来
 
@@ -70,7 +70,7 @@ Q2.比如说 MVC的M.V.C和我们学过的哪些技术是相关的（书本上�
 - V(View)	JSP、HTML、XHTML、XML、CSS
 - C(Controller)	Servlet、Spring boot、maven等
 
-#### 内置对象
+## 内置对象
 
 Q1.JSP中常用到的内置对象，PPT标题有
 
@@ -84,7 +84,7 @@ Q2.session相关
 
 生命周期：在第一个JSP页面或Servlet被装载时由服务器自动创建，并在用户退出应用程序时由服务器销毁
 
-#### P65代码
+## P65代码
 
 ```java
 @WebServlet("/LoginSession")
@@ -116,7 +116,7 @@ doPost(...)`参数
 
 题目分值为挖空个数 
 
-#### JSON
+## JSON
 
 Q1.语法格式 P68
 
@@ -162,7 +162,7 @@ JSON是一种轻量级的数据交换格式，全称——JavaScript对象表示
 - JSON的语法
 JavaScript对象字面量表示法语法的一个子集
 
-#### 异步通信 ajax 
+## 异步通信 ajax 
 
 Q1.
 
@@ -256,7 +256,7 @@ public class LogServlet extends HttpServlet {
 }
 ```
 
-#### Servlet过滤器
+## Servlet过滤器
 
 是什么：过滤器是小型的Web组件。若服务器（如Tomcat) 中有过滤器部署、则对于从客户端发送过来的请求，服务器首先让过滤器执行，这可能是安全、权限检查，也可能是字符集进行统一过滤处理；然后，或者让客户请求的目的地页面或Servlet处理，或者直接进行页面转发（假如安全检查没有通过）。如果系统中设置了多个过滤器（一般情况下一个过滤器完成一项特定任务），则一组过滤器会形成一个过滤链，客户请求会在过滤链中逐步过滤执行。
 
@@ -267,13 +267,78 @@ public class LogServlet extends HttpServlet {
 3. 在`HttpScrvletResponse`到达客户端之前,拦截`HttpServletResponse`
 4. 根据需要检查`HttpServletResponse` ，可以修改`HttpServletResponse` 头和数据
 
-#### Spring IOC
+## Spring IOC
 
 Q1.Spring IOC
 
 是什么：Spring两个核心功能之一是依赖注入(Dependency Injection,DI)和控制反转(Inversion Of Control,IOC)。Spring利用以来注入技术实现了控制反转功能。
 
 控制反转：将合作对象的引用或依赖交给第三方管理，从而实现对象之间的解耦。
+
+### <u>**Spring IOC管理bean**</u>
+
+Spring IOC的核心就是一个对象容器，所有对象（bean）通过Spring的xml配置文件进行管理，其实质就是一个大工厂。
+将原本由Java管理的代码交给xml配置文件管理，实现各组件的解耦，利于后期升级和维护
+
+**简单示例**
+
+HelloWorld.java
+
+```java
+public class HelloWorld {
+	private String message;						//成员变量
+	public void setMessage(String message){		//set方法
+		this.message=message;
+	}
+	public String getMessage(){
+		return this.message;
+	}
+}
+```
+
+SpringBean.xml
+
+```xml
+...
+<bean id="helloWorld" class="HelloWorld">		<!--id是给bean取别名，class为关联的类-->
+<property name="message" value="Hello World!">	<!--关联的类中有message对象，此处的value就是为其赋值-->
+...
+```
+
+测试类AppTest.java
+
+```java
+public class AppTest{
+    public static void main(String[] args) {
+        //必须操作，将context与SpringBean.xml绑定
+        ApplicationContext context=new ClassPathXmlApplicationContext("SpringBean.xml");
+        //获取context中id=helloWorld的bean，此处即完成了对obj1的初始化
+        HelloWorld obj1=(HelloWorld) context.getBean("helloWorld");
+        System.out.println(obj1.getMessage());
+        //同理，初始化obj2
+        HelloWorld obj2=(HelloWorld) context.getBean("helloWorld");
+        obj2.setMessage("张三，你好")；	//更改数据成员 message 的值
+        System.out.println(obj2.getMessage());
+        //再次输出obj1
+        System.out.println("obj1="+obj1.getMessage());
+    }
+}
+```
+
+**输出结果**
+
+> Hello World!
+>
+> 张三，你好
+>
+> obj1=张三，你好
+
+**要点**
+
+1. obj1和obj2都是通过xml文件配置的类名和id进行实例化的
+2. 默认配置文件装配的对象是单例的（singleton）的，也即是说obj1和obj2是同一个对象，可通过设置scope=prototype改变单例模式
+   这也说明了为什么obj2在修改自己的数据成员message之后，再输出obj1的message是和obj2一样的
+3. Spring容器生成的对象的生命周期由容器维护
 
 Q2.POJO
 
@@ -312,7 +377,7 @@ public class UserService {
 注解关键字`@Autowried`
 给定一个类，new一个POJO对象 
 
-#### Spring MVC P115	<font color=red>**粗略带过**</font>
+## Spring MVC P115	<font color=red>**粗略带过**</font>
 
 <img src="./web.assets/Spring MVC.png" alt="img"  />
 
@@ -324,18 +389,18 @@ Spring MVC是当前最优秀的MVC框架，自从Spring 3版本发布后，支�
 
 - Controller    负责处理用户请求并构建适当的模型，并将其传递给视图以供呈现。
 
-#### Maven的主要作用 P127	<font color=red>**粗略带过**</font>
+## Maven的主要作用 P127	<font color=red>**粗略带过**</font>
 
 Maven就是一个包含了项目对象模型(Project Object Model,POM)的软件项目管理工具，可以通过配置描述信息来管理项目的构建、报告和文档
 
-#### MyBatis	<font color=red>**粗略带过**</font>
+## MyBatis	<font color=red>**粗略带过**</font>
 
 ![img](./web.assets/⁫MyBatis.png)
 
 是一个基于Java的持久层框架
 支持自定义SQL、存储过程以及高级映射，免除了几乎所有的JDBC代码以及设置参数和获取结果集的工作
 
-#### JDBC应用示例
+## JDBC应用示例
 
 P145代码挖空
 
@@ -396,7 +461,7 @@ public class FirstJDBC {
 }
 ```
 
-#### 分页技术实现方案	 <font color=red>**粗略带过**</font>
+## 分页技术实现方案	 <font color=red>**粗略带过**</font>
 
 **书本部分：**
 
