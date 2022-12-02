@@ -282,7 +282,7 @@ Spring IOC的核心就是一个对象容器，所有对象（bean）通过Spring
 
 **简单示例**
 
-HelloWorld.java
+**HelloWorld.java**
 
 ```java
 public class HelloWorld {
@@ -296,7 +296,7 @@ public class HelloWorld {
 }
 ```
 
-SpringBean.xml
+**SpringBean.xml**
 
 ```xml
 ...
@@ -305,7 +305,7 @@ SpringBean.xml
 ...
 ```
 
-测试类AppTest.java
+**测试类AppTest.java**
 
 ```java
 public class AppTest{
@@ -339,6 +339,178 @@ public class AppTest{
 2. 默认配置文件装配的对象是单例的（singleton）的，也即是说obj1和obj2是同一个对象，可通过设置scope=prototype改变单例模式
    这也说明了为什么obj2在修改自己的数据成员message之后，再输出obj1的message是和obj2一样的
 3. Spring容器生成的对象的生命周期由容器维护
+
+### 基于xml的注入
+
+#### setter方法注入
+
+**User.java**
+
+```java
+ublic class User {
+    private String name;
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getName() {
+        return name;
+    }
+}
+```
+
+**UserDao.java**
+
+```java
+public class UserDao {
+    public void login(User u){
+        System.out.println("Welcome"+u.getName());
+    }
+}
+```
+
+**UserService.java**
+
+```java
+public class UserService {
+    private User user;
+    private UserDao userDao;
+	// 必须有set方法,否则无法实例化user对象以及userDao对象
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public void loginUser(){
+        userDao.login(user);
+    }
+}
+```
+
+**配置文件中**
+
+```xml
+<beans> 
+    <!--注册User-->
+    <bean id="user" class="User">
+        <property name="name" value="张三"/>
+    </bean>
+    <!--注册UserDao-->
+    <bean id="userDao" class="UserDao"/>
+    <!--注册UserService-->
+    <bean id="userService" class="UserService">
+        <property name="user" ref="user"/>
+        <property name="userDao" ref="userDao"/>
+    </bean>
+</beans>
+```
+
+**测试代码**
+
+```java
+public class AppTest {
+	public static void main(String[] args) {
+        //applicationContext.xml 为bean的配置文件
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+        // 此处userService对象通过其set方法进行实例化
+		UserService userService = (UserService) ctx.getBean("userService");
+		userService.loginUser();
+	}
+```
+
+**输出结果**
+
+> Welcome张三
+
+**要点**
+
+1. Spring框架装配**UerService对象**时，先用默认构造器（无参构造器）生成对象，然后根据UserService对象提供的set方法给对象赋值，所以UserService对象需要提供set方法
+2. **User对象**也是通过引用关系按set方法注入
+3. **UserDao对象**的生成是根据引用关系按构造器方法注入，因为UserDao对象没有set方法
+
+#### 构造方法注入
+
+**UserService.java** 修改
+
+```java
+public class UserService {
+    private User user;
+    private UserDao userDao;
+
+    public UserService(User user,UserDao userDao){
+        this.userDao = userDao;
+        this.user = user;
+    }
+
+    public void loginUser(){
+        userDao.login(user);
+    }
+}
+```
+
+配置文件修改
+
+```xml
+<bean id="userService" class="com.example.spring_01.service.UserService">
+        <constructor-arg ref="userDao"></constructor-arg>
+        <constructor-arg ref="user"></constructor-arg>
+</bean>
+```
+
+**要点**
+
+1. 配置文件中引入`<constructor-arg>`元素表明构造器参数
+2. 元素的顺序要与构造器形参的顺序一致
+   1. `public UserService(User user,UserDao userDao)`
+   2. `<constructor-arg ref="user"></constructor-arg>`
+      `<constructor-arg ref="userDao"></constructor-arg>`
+
+### 基于注解的依赖注入
+
+基于注解的依赖注入在xml配置方式之前进行，因此xml配置方式将覆盖前者
+
+Spring中没有打开注解配置方式，因此需要在Spring配置文件中启用
+
+```xml
+<context:annotation-config/>
+<!--注册UserService-->
+<bean id="userService" class="com.example.spring_01.service.UserService"></bean>
+<!--去掉所有子元素-->
+<!--其他不变-->
+```
+
+UserService.java
+
+```java
+public class UserService {
+    @Autowired
+    private User user;
+    @Autowired
+    private UserDao userDao;
+   /* @Autowired
+    public UserService(User user,UserDao userDao){
+        this.userDao = userDao;
+        this.user = user;
+    }*/
+    //上面为构造方式 下面为set方式，两者二选一即可通过直接方式简化bean的配置
+    /*
+    @Autowired
+    public void setUser(User user) {
+        this.user = user;
+    }
+    @Autowired
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+    */
+
+    public void loginUser(){
+        userDao.login(user);
+    }
+}
+```
 
 Q2.POJO
 
