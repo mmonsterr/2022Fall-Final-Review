@@ -137,30 +137,63 @@ Q3.在JavaScript中处理JSON
 ```javascript
 //增加、修改操作:
 var student={};//一个空对象
-student.name=“张三”；结果：{“name”: “张三”};
-student[“ID”]=“123456”; 结果：{“name”: “张三”,“ID”:“123456”};
+student.name=“张三”;
+student[“ID”]=“123456”;
+```
 
+**输出结果**
+
+> {}
+>
+> {“name”: “张三”};
+>
+> {“name”: “张三”,“ID”:“123456”};
+
+```javascript
 //取值、查询操作：
-var name=student.name 或：name= student[“name”];
+var name1=student.name; // 直接访问
+alert(name1);
 
+var name2= student[“name”]; // 通过索引访问
+alert(name2);
+```
+
+**输出结果**
+
+> 张三
+>
+> 张三
+
+```javascript
 //遍历操作:
-//类似于数组操作，不过，把下标用key替换。如下所示：
-for(var value in student)
- 		alert(student[value]);//类似于数组下标（键值为下标）	
+//类似于数组操作：
+for(var i in student)
+ 	console.log(i, student[i]); //i类似于数组下标（键值为下标）	
+```
 
+**输出结果**
+
+> name	张三
+>
+> ID	123456
+
+```javascript
 //删除操作：
 //删除JSON对象中的一组key/value对，可用delete(key)方法，如：
-delete(student ["name"]);//其结果相当于删除了“name”: “张三”。
-
+delete(student ["name"]); //其结果相当于删除了“name”: “张三”。
 ```
+
+**输出结果**
+
+> {“ID”:“123456”};
 
 Q4.JavaScript与JSON关系
 
 - JSON是JavaScript对象
-JSON是一种轻量级的数据交换格式，全称——JavaScript对象表示法（JavaScript Object Notation）
+  JSON是一种轻量级的数据交换格式，全称——JavaScript对象表示法（JavaScript Object Notation）
 
 - JSON的语法
-JavaScript对象字面量表示法语法的一个子集
+  JavaScript对象字面量表示法语法的一个子集
 
 ## 异步通信 ajax 
 
@@ -254,6 +287,49 @@ public class LogServlet extends HttpServlet {
         out.write(returnString);
     }
 }
+```
+
+## P85页代码
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>insert title here</title>
+    <script src="Js/vue.js"></script>
+    <script src="Js/axios.min.js"></script>
+</head>
+
+<body>
+    <h1>个人中心</h1>
+    <div id="app">
+        <div v-if="Login"><span>请登录</span></div>
+        <div v-if="person"><span>用户名:{{userName}}</span></div>
+    </div>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el: '#app',
+            data: { userName: "", Login: true, person: false },
+            created: function () {
+                self = this;
+                axios("LoadPersonInfo")
+                    .then(function (response) {
+                        if (response.data != "error") {
+                            self.person = true;
+                            self.login = false;
+                            self.userName = response.data;
+                        } else {
+                            self.person = false;
+                            self.login = true;
+                        }
+                    }).catch(function (error) { })
+            }
+        });
+    </script>
+</body>
+</htmil>
 ```
 
 ## Servlet过滤器
