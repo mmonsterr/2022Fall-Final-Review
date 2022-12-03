@@ -126,7 +126,7 @@ PageModel pageModel = (PageModel) request.getAttribute("pageModel");
 
 ![img](./WEB2.0.assets/AgAABbw_gxpi1arAyzJIDbOB7mYdbu5K.png)
 
-# **7. Springboot框架默认使用的日志处理工具包中把日志分为哪些等级****（ ？）****（从低到高）**
+# 7. Springboot框架默认使用的日志处理工具包中把日志分为哪些等级（ ？）（从低到高）
 
 ## **TRACE，DEBUG，INFO，WARN，ERROR，FATAL**
 
