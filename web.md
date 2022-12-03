@@ -289,7 +289,7 @@ public class LogServlet extends HttpServlet {
 }
 ```
 
-## P85页代码
+P85页代码
 
 ```html
 <!DOCTYPE html>
@@ -329,7 +329,7 @@ public class LogServlet extends HttpServlet {
         });
     </script>
 </body>
-</htmil>
+</html>
 ```
 
 ## Servlet过滤器
@@ -640,6 +640,8 @@ Spring MVC是当前最优秀的MVC框架，自从Spring 3版本发布后，支�
 ## Maven的主要作用 P127	<font color=red>**粗略带过**</font>
 
 Maven就是一个包含了项目对象模型(Project Object Model,POM)的软件项目管理工具，可以通过配置描述信息来管理项目的构建、报告和文档
+
+maven通过pom.xml实施项目构建余项目管理等任务 凡                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 
 ## MyBatis	<font color=red>**粗略带过**</font>
 
