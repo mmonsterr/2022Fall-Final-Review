@@ -732,8 +732,8 @@ public class LoginAjax extends HttpServlet {
 		String str=(String)request.getAttribute("log");
 		if(str.equals("error"))
 			out.println("<br>用户名或者密码错误");
-	} %>
-	</FONT> </BODY>
+	} %> 
+     </BODY>
 ```
 
 
