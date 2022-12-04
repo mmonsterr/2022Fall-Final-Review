@@ -16,19 +16,16 @@
 
 # **2. request对象的getParameter函数和getAttribute函数的使用场景有何不同**
 
-## **（1）方法成对**
+**（1）方法成对**
+
+- 只有getParameter()，没有setParameter()
+
+- setAttribute()和getAttribute()是一对；
 
 
+**（2）请求方式**
 
-​                ●      只有getParameter()，没有setParameter()
-
-​                ●      setAttribute()和getAttribute()是一对；
-
-
-
-## **（2）请求方式**
-
-​      **getParameter():**响应的是两个web组件之间为链接(重定向)关系时，如get和post表单提交请求，传递请求参数，注意此种方法是从web客户端向web服务端传递数据，代表HTTP请求数据
+​      **getParameter():**响应的是两个web组件之间为链接(重定向)关系时，如get和post表单提交请求，传递请求参数，注意此种方法是从**web客户端向web服务端**（前端向后端）传递数据，代表HTTP请求数据
 
 ```jsp
 <form name="form1" method="post" action="2.jsp">
@@ -40,13 +37,11 @@
 或
 1.jsp中有`<a href="2.jsp?username=accp">2.jsp</a>`，在2.jsp中通过`request.getParameter("username")`来获得请求参数`username`
 
-
-
-​      **getAttribute()：**响应的两个web组件之间为转发关系时，服务端的转发源通过`setAttribute()`设置传递的参数，然后转发目的通过`setAttribute()`获取传递的参数，这样转发时数据就不会丢失，注意此种方法只存在于web容器内部
+**getAttribute()：**响应的两个web组件之间为转发关系时，服务端的转发源通过`setAttribute()`设置传递的参数，然后转发目的通过`setAttribute()`获取传递的参数，这样转发时数据就不会丢失，注意此种方法只存在于web容器内部
 
 
 
-​      servlet端代码为：
+servlet端代码为：
 
 ```
 //pageModel是个对象
@@ -63,13 +58,11 @@ request.getRequestDispatcher("/basedata/item_maint.jsp").forward(request, respon
 PageModel pageModel = (PageModel) request.getAttribute("pageModel");
 ```
 
-## **（3）返回类型**
+**（3）返回类型**
 
-​      **getParameter()：**返回String类型的数据
+**getParameter()：**返回String类型的数据
 
-
-
-​      **getAttribute()：**返回可是String类型的数据，也可以是对象，但是当返回的是对象时需要强制转换
+**getAttribute()：**返回可是String类型的数据，也可以是对象，但是当返回的是对象时需要强制转换
 
 
 
@@ -104,10 +97,6 @@ PageModel pageModel = (PageModel) request.getAttribute("pageModel");
 1. 启动服务器时加载过滤器的实例，并调用init()方法来初始化实例； 
 2. 每一次请求时都只调用方法doFilter()进行处理； 
 3. 停止服务器时调用destroy()方法，销毁实例。
-
-
-
-
 
 # **5. Java中有哪些常用的JSON处理工具包**
 
@@ -152,13 +141,250 @@ PageModel pageModel = (PageModel) request.getAttribute("pageModel");
 
 由于Spring容器负责创建被调用者的实例，实例创建后又负责将该实例注入调用者，被称为依赖注入。
 
+## <u>**Spring IOC管理bean**</u>
+
+Spring IOC的核心就是一个对象容器，所有对象（bean）通过Spring的xml配置文件进行管理，其实质就是一个大工厂。
+将原本由Java管理的代码交给xml配置文件管理，实现各组件的解耦，利于后期升级和维护
+
+**简单示例**
+
+**HelloWorld.java**
+
+```java
+public class HelloWorld {
+	private String message;						//成员变量
+	public void setMessage(String message){		//set方法
+		this.message=message;
+	}
+	public String getMessage(){
+		return this.message;
+	}
+}
+```
+
+**SpringBean.xml**
+
+```xml
+...
+<bean id="helloWorld" class="HelloWorld">		<!--id是给bean取别名，class为关联的类-->
+<property name="message" value="Hello World!">	<!--关联的类中有message对象，此处的value就是为其赋值-->
+...
+```
+
+**测试类AppTest.java**
+
+```java
+public class AppTest{
+    public static void main(String[] args) {
+        //必须操作，将context与SpringBean.xml绑定
+        ApplicationContext context=new ClassPathXmlApplicationContext("SpringBean.xml");
+        //获取context中id=helloWorld的bean，此处即完成了对obj1的初始化
+        HelloWorld obj1=(HelloWorld) context.getBean("helloWorld");
+        System.out.println(obj1.getMessage());
+        //同理，初始化obj2
+        HelloWorld obj2=(HelloWorld) context.getBean("helloWorld");
+        obj2.setMessage("张三，你好")；	//更改数据成员 message 的值
+        System.out.println(obj2.getMessage());
+        //再次输出obj1
+        System.out.println("obj1="+obj1.getMessage());
+    }
+}
+```
+
+**输出结果**
+
+> Hello World!
+>
+> 张三，你好
+>
+> obj1=张三，你好
+
+**要点**
+
+1. obj1和obj2都是通过xml文件配置的类名和id进行实例化的
+2. 默认配置文件装配的对象是单例的（singleton）的，也即是说obj1和obj2是同一个对象，可通过设置scope=prototype改变单例模式
+   这也说明了为什么obj2在修改自己的数据成员message之后，再输出obj1的message是和obj2一样的
+3. Spring容器生成的对象的生命周期由容器维护
+
+## 基于xml的注入
+
+### setter方法注入
+
+**User.java**
+
+```java
+ublic class User {
+    private String name;
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getName() {
+        return name;
+    }
+}
+```
+
+**UserDao.java**
+
+```java
+public class UserDao {
+    public void login(User u){
+        System.out.println("Welcome"+u.getName());
+    }
+}
+```
+
+**UserService.java**
+
+```java
+public class UserService {
+    private User user;
+    private UserDao userDao;
+	// 必须有set方法,否则无法实例化user对象以及userDao对象
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public void loginUser(){
+        userDao.login(user);
+    }
+}
+```
+
+**配置文件中**
+
+```xml
+<beans> 
+    <!--注册User-->
+    <bean id="user" class="User">
+        <property name="name" value="张三"/>
+    </bean>
+    <!--注册UserDao-->
+    <bean id="userDao" class="UserDao"/>
+    <!--注册UserService-->
+    <bean id="userService" class="UserService">
+        <property name="user" ref="user"/>
+        <property name="userDao" ref="userDao"/>
+    </bean>
+</beans>
+```
+
+**测试代码**
+
+```java
+public class AppTest {
+	public static void main(String[] args) {
+        //applicationContext.xml 为bean的配置文件
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+        // 此处userService对象通过其set方法进行实例化
+		UserService userService = (UserService) ctx.getBean("userService");
+		userService.loginUser();
+	}
+```
+
+**输出结果**
+
+> Welcome张三
+
+**要点**
+
+1. Spring框架装配**UerService对象**时，先用默认构造器（无参构造器）生成对象，然后根据UserService对象提供的set方法给对象赋值，所以UserService对象需要提供set方法
+2. **User对象**也是通过引用关系按set方法注入
+3. **UserDao对象**的生成是根据引用关系按构造器方法注入，因为UserDao对象没有set方法
+
+### 构造方法注入
+
+**UserService.java** 修改
+
+```java
+public class UserService {
+    private User user;
+    private UserDao userDao;
+
+    public UserService(User user,UserDao userDao){
+        this.userDao = userDao;
+        this.user = user;
+    }
+
+    public void loginUser(){
+        userDao.login(user);
+    }
+}
+```
+
+配置文件修改
+
+```xml
+<bean id="userService" class="com.example.spring_01.service.UserService">
+        <constructor-arg ref="userDao"></constructor-arg>
+        <constructor-arg ref="user"></constructor-arg>
+</bean>
+```
+
+**要点**
+
+1. 配置文件中引入`<constructor-arg>`元素表明构造器参数
+2. 元素的顺序要与构造器形参的顺序一致
+   1. `public UserService(User user,UserDao userDao)`
+   2. `<constructor-arg ref="user"></constructor-arg>`
+      `<constructor-arg ref="userDao"></constructor-arg>`
+
+## 基于注解的依赖注入
+
+基于注解的依赖注入在xml配置方式之前进行，因此xml配置方式将覆盖前者
+
+Spring中没有打开注解配置方式，因此需要在Spring配置文件中启用
+
+```xml
+<context:annotation-config/>
+<!--注册UserService-->
+<bean id="userService" class="com.example.spring_01.service.UserService"></bean>
+<!--去掉所有子元素-->
+<!--其他不变-->
+```
+
+UserService.java
+
+```java
+public class UserService {
+    @Autowired
+    private User user;
+    @Autowired
+    private UserDao userDao;
+   /* @Autowired
+    public UserService(User user,UserDao userDao){
+        this.userDao = userDao;
+        this.user = user;
+    }*/
+    //上面为构造方式 下面为set方式，两者二选一即可通过直接方式简化bean的配置
+    /*
+    @Autowired
+    public void setUser(User user) {
+        this.user = user;
+    }
+    @Autowired
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+    */
+
+    public void loginUser(){
+        userDao.login(user);
+    }
+}
+```
+
 
 
 # **9. myBatis的作用**
 
 
 
-![img](./WEB2.0.assets/AgAABbw_gxrNC4Am7LtH6agVve4a9Pdj.png)
+<img src="./WEB2.0.assets/AgAABbw_gxrNC4Am7LtH6agVve4a9Pdj.png" alt="img" style="zoom:50%;" />
 
 是一个基于Java的持久层框架，iBATIS提供的持久层框架包括SQL Maps和Data Access Objects（DAOs）。MyBatis 是一款优秀的持久层框架，它支持自定义SQL、存储过程以及高级映射，免除了几乎所有的JDBC代码以及设置参数和获取结果集的工作。MyBatis 可以通过简单的XML或注解来配置和映射原始类型、接口和Java POJO（Plain Old Java Objects，普通 Java 对象）为数据库中的记录。
 
@@ -173,11 +399,11 @@ PageModel pageModel = (PageModel) request.getAttribute("pageModel");
 - 业务层	业务规则/业务流（Controller）、业务逻辑（Module）
 - 数据库访问层	SQL语句
 
-![img](./WEB2.0.assets/AgAABbw_gxrDPG_SwrNHmrJiv6bpN1Xn.png)
+<img src="./WEB2.0.assets/AgAABbw_gxrDPG_SwrNHmrJiv6bpN1Xn-1670120439391-1.png" alt="img" style="zoom:50%;" />
 
 # **11. myBatis开发DAO层(第9章PPT，13页、16页、17页)**
 
-```mysql
+```java
 @Mapper
 public interface DAOBookTable {
     @Update("update tb_book set bookName=#{bookName}, price=#{price}, publishing=#{publishing}, type=#{type}, `storage`=#{storage}, pic=#{pic} where bookID=#{bookID}")
@@ -310,16 +536,9 @@ public class UserManagementController {
         return um.addUser(user);
     }
 }
-
 ```
 
-
-
-
-
 **User 类**
-
-
 
 **UserManagement**
 
