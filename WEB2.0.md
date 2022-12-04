@@ -425,7 +425,7 @@ public interface DAOBookTable {
 
 ![image-20221204132523457](./WEB2.0.assets/image-20221204132523457.png)
 
-![image-20221204132726674](./WEB2.0.assets/image-20221204132726674.png)![输入图片说明](WEB2.0.assets/image-20221204132726674.png)
+![image-20221204132726674](./WEB2.0.assets/image-20221204132726674.png)
 
 
 
