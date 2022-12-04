@@ -1,4 +1,4 @@
-# WEB2.0
+![输入图片说明](WEB2.0.assets/image-20221204132258293.png)![输入图片说明](WEB2.0.assets/image-20221204132523457.png)# WEB2.0
 
 # 1.Servlet的运行过程
 
@@ -401,9 +401,9 @@ public class UserService {
 
 <img src="./WEB2.0.assets/AgAABbw_gxrDPG_SwrNHmrJiv6bpN1Xn-1670120439391-1.png" alt="img" style="zoom:50%;" />
 
-# **11. myBatis开发DAO层(第9章PPT，13页、16页、17页)**
+# 11. myBatis开发DAO层(第9章PPT，13页、16页、17页)**
 
-```java
+```mysql
 @Mapper
 public interface DAOBookTable {
     @Update("update tb_book set bookName=#{bookName}, price=#{price}, publishing=#{publishing}, type=#{type}, `storage`=#{storage}, pic=#{pic} where bookID=#{bookID}")
@@ -420,6 +420,12 @@ public interface DAOBookTable {
 }
 
 ```
+
+![image-20221204132258293](./WEB2.0.assets/image-20221204132258293.png)
+
+![image-20221204132523457](./WEB2.0.assets/image-20221204132523457.png)
+
+![image-20221204132726674](./WEB2.0.assets/image-20221204132726674.png)![输入图片说明](WEB2.0.assets/image-20221204132726674.png)
 
 
 
