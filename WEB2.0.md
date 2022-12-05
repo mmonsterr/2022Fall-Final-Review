@@ -4,15 +4,16 @@
 
 ![img](./WEB2.0.assets/AgAABbw_gxoaCw68fJtGo75ypGSsBHzE.png)
 
-​                ● 当来自客户端请求时（A,B,C请求）
+- 当来自客户端请求时（A,B,C请求）
 
-​                ● 服务器（tomcat）监听到请求
+- 服务器（tomcat）监听到请求
 
-​                ● 根据请求中的地址信息，根据映射规则（web.xml,或注解），服务器找到相应的servlet
+- 根据请求中的地址信息，根据映射规则（web.xml,或注解），服务器找到相应的servlet
 
-​                ● 同时，封装request,response对象传给servlet,并调用其service()方法
+- 同时，封装request,response对象传给servlet,并调用其service()方法
 
-​                ● 若A,B,C请求同时，则用多线程方法解决，每个线程有自己的数据
+- 若A,B,C请求同时，则用多线程方法解决，每个线程有自己的数据
+
 
 # **2. request对象的getParameter函数和getAttribute函数的使用场景有何不同**
 
@@ -43,18 +44,16 @@
 
 servlet端代码为：
 
-```
+```java
 //pageModel是个对象
 request.setAttribute("pageModel", pageModel);
 
 request.getRequestDispatcher("/basedata/item_maint.jsp").forward(request, response);
 ```
 
+另一个.jsp代码为（需要强制转换）：
 
-
-​      另一个.jsp代码为（需要强制转换）：
-
-```
+```java
 PageModel pageModel = (PageModel) request.getAttribute("pageModel");
 ```
 
@@ -64,19 +63,13 @@ PageModel pageModel = (PageModel) request.getAttribute("pageModel");
 
 **getAttribute()：**返回可是String类型的数据，也可以是对象，但是当返回的是对象时需要强制转换
 
-
-
 # **3.哪些情况Session对象结束生存期**
-
-
 
 - 客户端关闭浏览器
 
 - session过期
 
 - 调用invalidate方法使session 失效
-
-
 
 # **4. Servlet过滤器的生命周期**
 
@@ -118,8 +111,6 @@ PageModel pageModel = (PageModel) request.getAttribute("pageModel");
 # 7. Springboot框架默认使用的日志处理工具包中把日志分为哪些等级（ ？）（从低到高）
 
 ## **TRACE，DEBUG，INFO，WARN，ERROR，FATAL**
-
-
 
 **说明：**
 
@@ -388,8 +379,6 @@ public class UserService {
 
 是一个基于Java的持久层框架，iBATIS提供的持久层框架包括SQL Maps和Data Access Objects（DAOs）。MyBatis 是一款优秀的持久层框架，它支持自定义SQL、存储过程以及高级映射，免除了几乎所有的JDBC代码以及设置参数和获取结果集的工作。MyBatis 可以通过简单的XML或注解来配置和映射原始类型、接口和Java POJO（Plain Old Java Objects，普通 Java 对象）为数据库中的记录。
 
-
-
 # **10. Web开发DAO和MVC四层模式，用图示表示**
 
 ## **MVC四层开发模式：表现层、服务层、业务层、数据访问层**
@@ -501,13 +490,9 @@ public interface DAOBookTable {
 </html>
 ```
 
-
-
-
-
 # **13. 教材代码SpringMVC目录的src目录下的MVC结构文件**
 
-**UserManagementController  类**  
+**UserManagementController 类**  
 
 ```java
 package controller;
