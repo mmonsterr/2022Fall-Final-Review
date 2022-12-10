@@ -40,8 +40,6 @@
 
 **getAttribute()：**响应的两个web组件之间为转发关系时，服务端的转发源通过`setAttribute()`设置传递的参数，然后转发目的通过`setAttribute()`获取传递的参数，这样转发时数据就不会丢失，注意此种方法只存在于web容器内部
 
-
-
 servlet端代码为：
 
 ```java
