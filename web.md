@@ -622,7 +622,7 @@ public class UserService {
 
 代码挖空 比如
 
-注解关键字`@Autowried`
+注解关键字`@Autowired`
 给定一个类，new一个POJO对象 
 
 ## Spring MVC P115	<font color=red>**粗略带过**</font>
